@@ -16,7 +16,11 @@ const Home = () => {
     const [error, setError] = useState(null);
 
     // Status options for filtering
-    const STATUS_OPTIONS = ['watching', 'completed', 'dropped'];
+    const STATUS_OPTIONS = [
+        { value: 'watching', label: 'Watching', emoji: '👀', color: 'bg-blue-500' },
+        { value: 'completed', label: 'Completed', emoji: '✅', color: 'bg-green-500' },
+        { value: 'dropped', label: 'Dropped', emoji: '❌', color: 'bg-red-500' }
+    ];
 
     /**
      * Fetch tracked anime from the API
@@ -173,104 +177,124 @@ const Home = () => {
     }, []);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-6">
-            {/* Header */}
-            <div className="max-w-6xl mx-auto">
-                <h1 className="text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white">
-                    🎌 Anime Tracker
-                </h1>
+        <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900">
+            <div className="container mx-auto px-4 py-8 max-w-7xl">
+                {/* Header */}
+                <div className="text-center mb-12">
+                    <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
+                        🎌 Anime Tracker
+                    </h1>
+                    <p className="text-gray-600 dark:text-gray-300 text-lg">
+                        Track your favorite anime and never miss an episode
+                    </p>
+                </div>
 
                 {/* Search Section */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
-                    <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-                        <div className="flex w-full sm:w-auto">
+                <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-2xl shadow-xl p-6 mb-8 border border-white/20">
+                    <div className="flex flex-col md:flex-row gap-4 items-center justify-center">
+                        <div className="relative flex w-full md:w-auto">
                             <input
                                 type="text"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 onKeyPress={handleKeyPress}
-                                placeholder="Search anime..."
-                                className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-l-lg w-full sm:w-80 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                placeholder="Search for anime..."
+                                className="px-6 py-4 border border-gray-300 dark:border-gray-600 rounded-l-xl w-full md:w-96 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white text-lg placeholder-gray-400 transition-all duration-200"
                             />
                             <button
                                 onClick={handleSearch}
                                 disabled={loading}
-                                className="px-6 py-3 bg-blue-600 text-white rounded-r-lg hover:bg-blue-700 disabled:bg-blue-400 transition-colors font-medium"
+                                className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-r-xl hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold text-lg shadow-md hover:shadow-lg"
                             >
-                                {loading ? '⏳' : '🔍'}
+                                {loading ? (
+                                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                                ) : (
+                                    '🔍 Search'
+                                )}
                             </button>
                         </div>
                         
                         {searchTerm && (
                             <button
                                 onClick={handleClearSearch}
-                                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                                className="px-6 py-4 bg-gray-500 text-white rounded-xl hover:bg-gray-600 transition-all duration-200 font-medium shadow-md hover:shadow-lg"
                             >
-                                Clear
+                                Clear Search
                             </button>
                         )}
                     </div>
                 </div>
 
                 {/* Status Filter */}
-                <div className="flex justify-center mb-8">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-2 flex gap-2">
-                        {STATUS_OPTIONS.map((status) => (
-                            <button
-                                key={status}
-                                onClick={() => setFilterStatus(status)}
-                                className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
-                                    filterStatus === status
-                                        ? 'bg-blue-600 text-white shadow-md'
-                                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                                }`}
-                            >
-                                {status.charAt(0).toUpperCase() + status.slice(1)}
-                            </button>
-                        ))}
+                <div className="flex justify-center mb-10">
+                    <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-2xl shadow-xl p-3 border border-white/20">
+                        <div className="flex flex-wrap gap-2 justify-center">
+                            {STATUS_OPTIONS.map((status) => (
+                                <button
+                                    key={status.value}
+                                    onClick={() => setFilterStatus(status.value)}
+                                    className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${
+                                        filterStatus === status.value
+                                            ? `${status.color} text-white shadow-lg`
+                                            : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                                    }`}
+                                >
+                                    <span className="mr-2">{status.emoji}</span>
+                                    {status.label}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
                 {/* Error Message */}
                 {error && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-3 sm:px-4 py-3 rounded-lg mb-4 sm:mb-6 text-center text-sm sm:text-base mx-2 sm:mx-0">
-                        {error}
+                    <div className="bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700 text-red-700 dark:text-red-300 px-6 py-4 rounded-xl mb-6 text-center font-medium shadow-md">
+                        ⚠️ {error}
                     </div>
                 )}
 
                 {/* Loading State */}
                 {loading && (
-                    <div className="text-center py-8 sm:py-12">
-                        <div className="inline-block animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-blue-600"></div>
-                        <p className="text-gray-600 dark:text-gray-300 mt-2 text-sm sm:text-base">Loading anime...</p>
+                    <div className="text-center py-16">
+                        <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-200 border-t-purple-600 mb-4"></div>
+                        <p className="text-gray-600 dark:text-gray-300 text-lg font-medium">
+                            Searching for anime...
+                        </p>
                     </div>
                 )}
 
                 {/* Anime Grid */}
                 {!loading && (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6 px-2 sm:px-0">
+                    <>
                         {filteredList.length > 0 ? (
-                            filteredList.map((anime) => (
-                                <AnimeCard
-                                    key={anime._id || anime.mal_id}
-                                    anime={anime}
-                                    trackedAnime={!!anime._id}
-                                    onTrack={handleTrack}
-                                    onUpdateProgress={handleUpdateProgress}
-                                    onUpdateStatus={handleUpdateStatus}
-                                    onDelete={handleDelete}
-                                />
-                            ))
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-8">
+                                {filteredList.map((anime) => (
+                                    <AnimeCard
+                                        key={anime._id || anime.mal_id}
+                                        anime={anime}
+                                        trackedAnime={!!anime._id}
+                                        onTrack={handleTrack}
+                                        onUpdateProgress={handleUpdateProgress}
+                                        onUpdateStatus={handleUpdateStatus}
+                                        onDelete={handleDelete}
+                                    />
+                                ))}
+                            </div>
                         ) : (
-                            <div className="col-span-full text-center py-8 sm:py-12 px-4">
-                                <p className="text-gray-500 dark:text-gray-400 text-base sm:text-lg">
+                            <div className="text-center py-20">
+                                <div className="text-6xl mb-4">🔍</div>
+                                <h3 className="text-2xl font-bold text-gray-600 dark:text-gray-300 mb-2">
+                                    {searchTerm ? 'No Results Found' : 'Your Anime List is Empty'}
+                                </h3>
+                                <p className="text-gray-500 dark:text-gray-400 text-lg max-w-md mx-auto">
                                     {searchTerm 
-                                        ? 'No anime found. Try a different search term.' 
-                                        : 'No anime in your list yet. Start by searching for anime to track!'}
+                                        ? 'Try searching with different keywords or check your spelling.' 
+                                        : 'Start by searching for anime above to build your personal tracking list!'}
                                 </p>
                             </div>
                         )}
-                    </div>
+                    </>
                 )}
             </div>
         </div>
