@@ -90,6 +90,7 @@ const AnimeGrid = ({
   return (
     <div>
       {searchTerm ? (
+        // Flat grid shown during search — no grouping, no toggle headers
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-8">
           {animeList.map(anime => (
             <AnimeCard
@@ -104,23 +105,18 @@ const AnimeGrid = ({
           ))}
         </div>
       ) : (
+        // Only show grouping when not searching
         <>
-          {renderGroup(
-            'Episodes Left',
-            withEpisodesLeft,
-            showLeft,
-            () => setShowLeft(prev => !prev)
-          )}
-          {renderGroup(
-            'No Episodes Left',
-            noEpisodesLeft,
-            showNone,
-            () => setShowNone(prev => !prev)
-          )}
+          {withEpisodesLeft.length > 0 &&
+            renderGroup('Episodes Left', withEpisodesLeft, showLeft, () => setShowLeft(prev => !prev))}
+
+          {noEpisodesLeft.length > 0 &&
+            renderGroup('No Episodes Left', noEpisodesLeft, showNone, () => setShowNone(prev => !prev))}
         </>
       )}
     </div>
   );
+
 };
 
 export default AnimeGrid;
