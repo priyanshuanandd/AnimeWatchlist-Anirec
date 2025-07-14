@@ -67,8 +67,8 @@ app.get('/api/anime/:id', async (req, res) => {
 
   try {
     const [detailsRes, picturesRes] = await Promise.all([
-      fetchWithRetry(`https://api.jikan.moe/v4/anime/${id}/full`, 3, 1000),
-      fetchWithRetry(`https://api.jikan.moe/v4/anime/${id}/pictures`, 3, 1000),
+      fetchWithRetry(`https://api.jikan.moe/v4/anime/${id}/full`, 1, 1000),
+      fetchWithRetry(`https://api.jikan.moe/v4/anime/${id}/pictures`, 1, 1000),
     ]);
 
 
