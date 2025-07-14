@@ -1,16 +1,15 @@
-// models/models.js
 const mongoose = require('mongoose');
 
-const animeSchema = new mongoose.Schema({
-  mal_id: Number,
+const AnimeSchema = new mongoose.Schema({
+  userId: { type: String, required: true },
+  mal_id: { type: Number, required: true },
   title: String,
-  image: String,
-  totalEpisodes: Number,
-  watchedEpisodes: Number,
   airing: Boolean,
+  totalEpisodes: Number,
   nextEpisodeDate: String,
-  userId: String,
-  status: { type: String, default: 'watching' }, // 👈 important
+  picture: String,
+  watchedEpisodes: { type: Number, default: 0 },
+  status: { type: String, enum: ['Watching', 'Completed', 'Dropped'], default: 'Watching' }
 });
 
-module.exports = mongoose.model('Anime', animeSchema);
+module.exports = mongoose.model('Anime', AnimeSchema);
