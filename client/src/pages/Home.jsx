@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import AnimeCard from '../components/AnimeCard';
 import axios from 'axios';
+import { useUser } from '@clerk/clerk-react';
 
 // Environment variable for API URL with fallback
-const API_URL = (typeof process !== 'undefined' && process.env?.REACT_APP_API_URL) || 
-                (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_URL) || 
-                'http://localhost:5000';
+const API_URL = (typeof process !== 'undefined' && process.env?.REACT_APP_API_URL) ||
+    (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_URL) ||
+    'http://localhost:5000';
 
 const Home = () => {
     // State management
@@ -14,6 +15,7 @@ const Home = () => {
     const [filterStatus, setFilterStatus] = useState('watching');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const { user } = useUser();
 
     // Status options for filtering
     const STATUS_OPTIONS = [
@@ -28,7 +30,10 @@ const Home = () => {
     const fetchTracked = async () => {
         try {
             setError(null);
-            const response = await axios.get(`${API_URL}/api/tracked`);
+            const response = await axios.get(`${API_URL}/api/tracked`, {
+                params: { userId: user.id }
+            });
+
             setAnimeList(Array.isArray(response.data) ? response.data : []);
         } catch (err) {
             console.error('Error fetching tracked anime:', err);
@@ -42,7 +47,7 @@ const Home = () => {
      */
     const handleSearch = async () => {
         if (!searchTerm.trim()) return;
-        
+
         setLoading(true);
         setError(null);
 
@@ -105,7 +110,11 @@ const Home = () => {
                 watchedEpisodes: 0,
                 airing: data.airing,
                 nextEpisodeDate: data.nextEpisodeDate,
+                userId: user.id,
             };
+
+            await axios.post(`${API_URL}/api/track`, payload);
+
 
             await axios.post(`${API_URL}/api/track`, payload);
             await fetchTracked();
@@ -213,7 +222,7 @@ const Home = () => {
                                 )}
                             </button>
                         </div>
-                        
+
                         {searchTerm && (
                             <button
                                 onClick={handleClearSearch}
@@ -233,11 +242,10 @@ const Home = () => {
                                 <button
                                     key={status.value}
                                     onClick={() => setFilterStatus(status.value)}
-                                    className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${
-                                        filterStatus === status.value
-                                            ? `${status.color} text-white shadow-lg`
-                                            : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                                    }`}
+                                    className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${filterStatus === status.value
+                                        ? `${status.color} text-white shadow-lg`
+                                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                                        }`}
                                 >
                                     <span className="mr-2">{status.emoji}</span>
                                     {status.label}
@@ -288,8 +296,8 @@ const Home = () => {
                                     {searchTerm ? 'No Results Found' : 'Your Anime List is Empty'}
                                 </h3>
                                 <p className="text-gray-500 dark:text-gray-400 text-lg max-w-md mx-auto">
-                                    {searchTerm 
-                                        ? 'Try searching with different keywords or check your spelling.' 
+                                    {searchTerm
+                                        ? 'Try searching with different keywords or check your spelling.'
                                         : 'Start by searching for anime above to build your personal tracking list!'}
                                 </p>
                             </div>
