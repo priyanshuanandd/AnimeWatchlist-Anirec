@@ -125,7 +125,20 @@ const AnimeCard = ({
             )}
           </div>
         </div>
-
+        {/* Next Episode Date */}
+        {airingDate && (
+          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 border border-blue-200 dark:border-blue-800">
+            <div className="flex items-center text-blue-700 dark:text-blue-300">
+              <span className="mr-2">📅</span>
+              <div>
+                <div className="font-medium">Next Episode</div>
+                <div className="text-sm">
+                  {dayjs(airingDate).format('dddd, MMM D')} ({dayjs(airingDate).fromNow()})
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         {/* Progress Circle for tracked anime */}
         {trackedAnime && total > 0 && (
           <div className="flex items-center justify-center">
@@ -231,20 +244,7 @@ const AnimeCard = ({
               </div>
             )}
 
-            {/* Next Episode Date */}
-            {airingDate && (
-              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 border border-blue-200 dark:border-blue-800">
-                <div className="flex items-center text-blue-700 dark:text-blue-300">
-                  <span className="mr-2">📅</span>
-                  <div>
-                    <div className="font-medium">Next Episode</div>
-                    <div className="text-sm">
-                      {dayjs(airingDate).format('dddd, MMM D')} ({dayjs(airingDate).fromNow()})
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
+
 
             {/* Action Buttons */}
             {trackedAnime ? (

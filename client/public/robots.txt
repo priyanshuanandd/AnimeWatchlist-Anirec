@@ -1,0 +1,5 @@
+# robots.txt for Anime Tracker
+User-agent: *
+Allow: /
+
+Sitemap: https://theanirec.vercel.app/sitemap.xml
