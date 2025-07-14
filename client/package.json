@@ -12,6 +12,7 @@
   "dependencies": {
     "@clerk/clerk-react": "^5.33.0",
     "axios": "^1.10.0",
+    "dayjs": "^1.11.13",
     "dotenv": "^17.2.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
