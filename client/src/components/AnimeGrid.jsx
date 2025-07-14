@@ -1,4 +1,3 @@
-// components/AnimeGrid.jsx
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import AnimeCard from './AnimeCard';
@@ -90,17 +89,35 @@ const AnimeGrid = ({
 
   return (
     <div>
-      {renderGroup(
-        'Episodes Left',
-        withEpisodesLeft,
-        showLeft,
-        () => setShowLeft(prev => !prev)
-      )}
-      {renderGroup(
-        'No Episodes Left',
-        noEpisodesLeft,
-        showNone,
-        () => setShowNone(prev => !prev)
+      {searchTerm ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-8">
+          {animeList.map(anime => (
+            <AnimeCard
+              key={anime._id || anime.mal_id}
+              anime={anime}
+              trackedAnime={!!anime._id}
+              onTrack={onTrack}
+              onUpdateProgress={onUpdateProgress}
+              onUpdateStatus={onUpdateStatus}
+              onDelete={onDelete}
+            />
+          ))}
+        </div>
+      ) : (
+        <>
+          {renderGroup(
+            'Episodes Left',
+            withEpisodesLeft,
+            showLeft,
+            () => setShowLeft(prev => !prev)
+          )}
+          {renderGroup(
+            'No Episodes Left',
+            noEpisodesLeft,
+            showNone,
+            () => setShowNone(prev => !prev)
+          )}
+        </>
       )}
     </div>
   );
