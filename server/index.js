@@ -21,7 +21,10 @@ const PORT = 5000;
 require('dotenv').config();
 const mongoose = require('mongoose');
 
-app.use(cors());
+app.use(cors({
+  origin: '*', // or add mobile IP/domain if needed
+}));
+
 app.use(express.json());
 async function fetchWithRetry(url, retries = 3, delay = 1000) {
   for (let attempt = 1; attempt <= retries; attempt++) {
