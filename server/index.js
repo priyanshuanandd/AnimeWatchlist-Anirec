@@ -199,7 +199,7 @@ app.delete('/api/delete/:id', async (req, res) => {
   }
 });
 
-app.get('/',(req, res) => {
+app.get('/api',(req, res) => {
   res.send("WORKS");
 });
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
