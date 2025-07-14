@@ -57,7 +57,7 @@ const Home = () => {
 
             // Enrich search results with full anime data
             const enrichedResults = await Promise.all(
-                baseResults.map(async (anime) => {
+                baseResults.slice(0, 5).map(async (anime) => {
                     try {
                         const fullResponse = await axios.get(`${API_URL}/api/anime/${anime.mal_id}`);
                         return fullResponse.data;
@@ -75,6 +75,7 @@ const Home = () => {
                     }
                 })
             );
+
 
             setAnimeList(enrichedResults);
         } catch (err) {

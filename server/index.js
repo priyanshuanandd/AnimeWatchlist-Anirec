@@ -23,6 +23,21 @@ const mongoose = require('mongoose');
 
 app.use(cors());
 app.use(express.json());
+async function fetchWithRetry(url, retries = 3, delay = 1000) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const res = await axios.get(url);
+      return res;
+    } catch (err) {
+      if (err.response?.status === 429 && attempt < retries) {
+        console.warn(`Rate limited (429) on ${url}. Retrying in ${delay}ms... (Attempt ${attempt})`);
+        await new Promise(res => setTimeout(res, delay));
+      } else {
+        throw err; // Fail if not 429 or out of retries
+      }
+    }
+  }
+}
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
@@ -49,9 +64,10 @@ app.get('/api/anime/:id', async (req, res) => {
 
   try {
     const [detailsRes, picturesRes] = await Promise.all([
-      axios.get(`https://api.jikan.moe/v4/anime/${id}/full`),
-      axios.get(`https://api.jikan.moe/v4/anime/${id}/pictures`),
+      fetchWithRetry(`https://api.jikan.moe/v4/anime/${id}/full`, 3, 1000),
+      fetchWithRetry(`https://api.jikan.moe/v4/anime/${id}/pictures`, 3, 1000),
     ]);
+
 
     const anime = detailsRes.data.data;
     const pictures = picturesRes.data.data || [];

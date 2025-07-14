@@ -34,7 +34,14 @@ const AnimeCard = ({
   const handleImageError = () => {
     setImageError(true);
   };
+  // const handlePlaceHolder = async (){
+  //   try{
+  //       const data = await axios.get('https://placewaifu.com/image/');
 
+  //   }catch(err){
+
+  //   }
+  // }
   const getStatusColor = (status) => {
     switch (status) {
       case 'watching':
@@ -65,22 +72,18 @@ const AnimeCard = ({
     <div className="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-white/20 hover:border-purple-200 dark:hover:border-purple-600 transform hover:-translate-y-1 w-full max-w-md mx-auto">
       {/* Image Container */}
       <div className="relative overflow-hidden">
-        {!imageError ? (
-          <img
-            src={anime.image || anime.images?.jpg?.large_image_url}
-            alt={anime.title}
-            className="w-full h-64 md:h-72 object-cover transition-transform duration-300 group-hover:scale-105"
-            onError={handleImageError}
-          />
-        ) : (
-          <div className="w-full h-64 md:h-72 bg-gradient-to-br from-purple-200 to-pink-200 dark:from-purple-800 dark:to-pink-800 flex items-center justify-center">
-            <div className="text-center">
-              <div className="text-4xl mb-2">🎌</div>
-              <p className="text-gray-600 dark:text-gray-300 font-medium">No Image</p>
-            </div>
-          </div>
-        )}
-        
+        <img
+          src={
+            !imageError
+              ? anime.image || anime.images?.jpg?.large_image_url
+              : 'https://placewaifu.com/image/400/300' // Replace with your actual placeholder image path
+          }
+          alt={anime.title}
+          className="w-full h-64 md:h-72 object-cover transition-transform duration-300 group-hover:scale-105"
+          onError={handleImageError}
+        />
+
+
         {/* Status Badge */}
         {trackedAnime && anime.status && (
           <div className={`absolute top-3 right-3 ${getStatusColor(anime.status)} text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg`}>
@@ -91,11 +94,10 @@ const AnimeCard = ({
 
         {/* Airing Status */}
         <div className="absolute top-3 left-3">
-          <div className={`px-3 py-1 rounded-full text-sm font-medium shadow-lg ${
-            anime.airing 
-              ? 'bg-green-500 text-white' 
+          <div className={`px-3 py-1 rounded-full text-sm font-medium shadow-lg ${anime.airing
+              ? 'bg-green-500 text-white'
               : 'bg-gray-500 text-white'
-          }`}>
+            }`}>
             {anime.airing ? '🔴 Airing' : '⏹️ Finished'}
           </div>
         </div>
@@ -103,7 +105,7 @@ const AnimeCard = ({
         {/* Progress Bar */}
         {trackedAnime && total > 0 && (
           <div className="absolute bottom-0 left-0 right-0 bg-black/20 backdrop-blur-sm">
-            <div 
+            <div
               className="h-1 bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-300"
               style={{ width: `${progressPercentage}%` }}
             />
@@ -117,7 +119,7 @@ const AnimeCard = ({
           <h3 className="font-bold text-lg text-gray-800 dark:text-white line-clamp-2 mb-2">
             {anime.title}
           </h3>
-          
+
           <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300">
             <span>📺 {total || 'N/A'} episodes</span>
             {trackedAnime && (
@@ -196,7 +198,7 @@ const AnimeCard = ({
                     Episode Progress
                   </span>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleUpdate(watched - 1)}
@@ -205,13 +207,13 @@ const AnimeCard = ({
                   >
                     −
                   </button>
-                  
+
                   <div className="flex-1 text-center">
                     <span className="text-lg font-semibold text-gray-800 dark:text-white">
                       {watched} / {total}
                     </span>
                   </div>
-                  
+
                   <button
                     onClick={() => handleUpdate(watched + 1)}
                     disabled={watched >= total}
