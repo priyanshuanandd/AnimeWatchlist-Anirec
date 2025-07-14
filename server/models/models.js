@@ -1,7 +1,7 @@
+// models/models.js
 const mongoose = require('mongoose');
 
-const AnimeSchema = new mongoose.Schema({
-  userId: String, // for multi-user support
+const animeSchema = new mongoose.Schema({
   mal_id: Number,
   title: String,
   image: String,
@@ -9,6 +9,8 @@ const AnimeSchema = new mongoose.Schema({
   watchedEpisodes: Number,
   airing: Boolean,
   nextEpisodeDate: String,
+  userId: String,
+  status: { type: String, default: 'watching' }, // 👈 important
 });
 
-module.exports = mongoose.model('Anime', AnimeSchema);
+module.exports = mongoose.model('Anime', animeSchema);

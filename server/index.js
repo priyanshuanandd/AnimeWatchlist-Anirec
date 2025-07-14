@@ -17,6 +17,7 @@ dayjs.extend(isSameOrBefore);
 
 const app = express();
 const PORT = 5000;
+const serverless = require('serverless-http');
 
 app.use(cors());
 app.use(express.json());
@@ -200,5 +201,5 @@ app.delete('/api/delete/:id', async (req, res) => {
 });
 
 
-
+module.exports.handler = serverless(app);
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
