@@ -194,13 +194,14 @@ const Home = () => {
                     <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
                         🎌 Anime Tracker
                     </h1>
+                    
                     <p className="text-gray-600 dark:text-gray-300 text-lg">
                         Track your favorite anime and never miss an episode
                     </p>
                 </div>
 
                 {/* Search Section */}
-                <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-2xl shadow-xl p-6 mb-8 border border-white/20">
+                <div className="backdrop-blur-md rounded-2xl p-6 mb-8">
                     <div className="flex flex-col md:flex-row gap-4 items-center justify-center">
                         <div className="relative flex w-full md:w-auto">
                             <input

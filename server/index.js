@@ -120,7 +120,7 @@ app.get('/api/anime/:id', async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching enriched anime data:', error.message);
-    res.status(500).json({ error: 'Failed to fetch enriched anime data' });
+    console.status(500).json({ error: 'Failed to fetch enriched anime data' });
   }
 });
 

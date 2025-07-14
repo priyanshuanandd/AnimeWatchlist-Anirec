@@ -34,14 +34,7 @@ const AnimeCard = ({
   const handleImageError = () => {
     setImageError(true);
   };
-  // const handlePlaceHolder = async (){
-  //   try{
-  //       const data = await axios.get('https://placewaifu.com/image/');
 
-  //   }catch(err){
-
-  //   }
-  // }
   const getStatusColor = (status) => {
     switch (status) {
       case 'watching':
@@ -68,20 +61,23 @@ const AnimeCard = ({
     }
   };
 
+
   return (
     <div className="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-white/20 hover:border-purple-200 dark:hover:border-purple-600 transform hover:-translate-y-1 w-full max-w-md mx-auto">
       {/* Image Container */}
       <div className="relative overflow-hidden">
         <img
-          src={
-            !imageError
-              ? anime.image || anime.images?.jpg?.large_image_url
-              : 'https://placewaifu.com/image/400/300' // Replace with your actual placeholder image path
-          }
+          src={anime.image || anime.images?.jpg?.large_image_url || 'https://i.postimg.cc/pL6XHghj/anime-sleepy.gif'}
           alt={anime.title}
           className="w-full h-64 md:h-72 object-cover transition-transform duration-300 group-hover:scale-105"
-          onError={handleImageError}
+          onError={(e) => {
+            // fallback immediately
+            e.target.onerror = null;
+            e.target.src = 'https://i.postimg.cc/pL6XHghj/anime-sleepy.gif';
+          }}
         />
+
+
 
 
         {/* Status Badge */}
@@ -95,8 +91,8 @@ const AnimeCard = ({
         {/* Airing Status */}
         <div className="absolute top-3 left-3">
           <div className={`px-3 py-1 rounded-full text-sm font-medium shadow-lg ${anime.airing
-              ? 'bg-green-500 text-white'
-              : 'bg-gray-500 text-white'
+            ? 'bg-green-500 text-white'
+            : 'bg-gray-500 text-white'
             }`}>
             {anime.airing ? '🔴 Airing' : '⏹️ Finished'}
           </div>
