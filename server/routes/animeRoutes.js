@@ -101,17 +101,44 @@ router.post('/track', async (req, res) => {
 });
 
 // Get tracked anime
+// Get all tracked anime
 router.get('/tracked', async (req, res) => {
   try {
     const { userId } = req.query;
     if (!userId) return res.status(400).json({ error: 'Missing userId' });
 
     const tracked = await Anime.find({ userId });
-    res.json(tracked);
+
+    const updatedAnimeList = await Promise.all(tracked.map(async (anime) => {
+      if (anime.airing && anime.nextEpisodeDate) {
+        let nextEpDate = dayjs(anime.nextEpisodeDate);
+        const now = dayjs();
+
+        let episodeIncrement = 0;
+
+        // Increment while nextEpDate is in the past
+        while (nextEpDate.isBefore(now)) {
+          episodeIncrement += 1;
+          nextEpDate = nextEpDate.add(1, 'week');
+        }
+
+        if (episodeIncrement > 0) {
+          anime.totalEpisodes += episodeIncrement;
+          anime.nextEpisodeDate = nextEpDate.toISOString();
+          await anime.save();
+        }
+      }
+
+      return anime;
+    }));
+
+    res.json(updatedAnimeList);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Could not fetch tracked anime' });
   }
 });
+
 
 // Update progress
 router.put('/update-progress/:id', async (req, res) => {
