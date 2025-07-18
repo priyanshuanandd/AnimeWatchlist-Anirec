@@ -1,6 +1,6 @@
 import React from 'react';
 import Home from './pages/Home';
-import { SignIn, SignOutButton, useUser } from '@clerk/clerk-react';
+import { SignIn, SignOutButton, useUser ,RedirectToSignIn,RedirectToSignUp, SignUp} from '@clerk/clerk-react';
 import './index.css'
 function App() {
   const { user } = useUser();
@@ -9,7 +9,7 @@ function App() {
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white">
       {!user ? (
         <div className="flex justify-center items-center min-h-screen">
-          <SignIn routing="hash" />
+          <SignIn  forceRedirectUrl="https://theanirec.vercel.app" />
         </div>
       ) : (
         <div className="p-4">
